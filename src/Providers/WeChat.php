@@ -111,6 +111,7 @@ class WeChat extends Base
         return \sprintf($this->baseUrl.'/oauth2%s/access_token', empty($this->component) ? '' : '/component');
     }
 
+    
     public function userFromCode(string $code): Contracts\UserInterface
     {
         if (\in_array('snsapi_base', $this->scopes)) {
