@@ -275,7 +275,12 @@ abstract class Base implements Contracts\ProviderInterface
 
     protected function fromJsonBody(MessageInterface $response): array
     {
-        $result = Utils::jsonDecode((string) $response->getBody(), true);
+        if(function_exists('maybe_json_decode')){
+            $result = maybe_json_decode((string) $response->getBody(), true);
+        }else{
+            $result = Utils::jsonDecode((string) $response->getBody(), true);
+        }
+
 
         \is_array($result) || throw new Exceptions\InvalidArgumentException('Decoded the given response payload failed.');
 
