@@ -113,14 +113,15 @@ class WeChat extends Base
 
     public function userFromCode(string $code): Contracts\UserInterface
     {
-        $token = $this->getTokenFromCode($code);
-        if($token &&isset($token['errcode'])&&$token['errcode']!==0){
-            throw new \Exception($token['errmsg'],$token['errcode']);
+        if (\in_array('snsapi_base', $this->scopes)) {
+            $res = $this->fromJsonBody($this->getTokenFromCode($code));
+            if($res &&isset($res['errcode'])&&$res['errcode']!==0){
+                throw new \Exception($res['errmsg'],$res['errcode']);
+            }
+            return $this->mapUserToObject($res);
         }
 
-        if (\in_array('snsapi_base', $this->scopes)) {
-            return $this->mapUserToObject($this->fromJsonBody($token));
-        }
+        $token = $this->tokenFromCode($code);
 
         $this->withOpenid($token['openid']);
 
